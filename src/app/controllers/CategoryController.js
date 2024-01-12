@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import Category from "../models/Category";
-
+import User from "../models/User";
 class CategoryController {
   async store(request, response) {
     const schema = Yup.object().shape({
@@ -9,6 +9,15 @@ class CategoryController {
 
     try {
       await schema.validate(request.body, { abortEarly: false });
+
+      const {admin: isAdmin} = await User.findByPk(request.userId)
+
+      console.log(isAdmin)
+
+      if(!isAdmin) {
+        return response.status(401).json()
+      }
+
 
       const { name } = request.body;
 
@@ -24,9 +33,9 @@ class CategoryController {
         });
       }
 
-      const category = await Category.create({ name });
+      const {id} = await Category.create({ name });
 
-      return response.json(category);
+      return response.json(id, name);
     } catch (err) {
       console.log(err);
       return response.status(400).json({ error: err.errors });
