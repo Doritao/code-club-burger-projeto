@@ -2,6 +2,9 @@ import * as Yup from "yup";
 import Category from "../models/Category";
 import User from "../models/User";
 class CategoryController {
+
+  
+
   async store(request, response) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -12,7 +15,7 @@ class CategoryController {
 
       const {admin: isAdmin} = await User.findByPk(request.userId)
 
-      console.log(isAdmin)
+      
 
       if(!isAdmin) {
         return response.status(401).json()
@@ -20,6 +23,9 @@ class CategoryController {
 
 
       const { name } = request.body;
+
+      const { filename: path } = request.file;
+
 
       const categoryExists = await Category.findOne({
         where: {
@@ -33,9 +39,9 @@ class CategoryController {
         });
       }
 
-      const {id} = await Category.create({ name });
+      const {id} = await Category.create({ name, path });
 
-      return response.json(id, name);
+      return response.json({id, name});
     } catch (err) {
       console.log(err);
       return response.status(400).json({ error: err.errors });
@@ -46,6 +52,9 @@ class CategoryController {
     const categories = await Category.findAll();
     return response.json(categories);
   }
+
+
+  
 }
 
 export default new CategoryController();
