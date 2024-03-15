@@ -15,7 +15,7 @@ class Database {
   }
 
   init() {
-    this.connection = new Sequelize(configDatabase);
+    this.connection = new Sequelize('postgresql://postgres:HbzIzmpMwdmKLttXkgCSITfpMLfeMQVZ@monorail.proxy.rlwy.net:23657/railway');
     models
       .map((model) => model.init(this.connection))
       .map(
@@ -25,7 +25,7 @@ class Database {
 
   mongo() {
     this.mongoConnection = mongoose.connect(
-      'mongodb://localhost:27017/codeburger'
+      'mongodb://mongo:fACTRlFTWAusgVujqRmULfDmAXzIPuhr@viaduct.proxy.rlwy.net:26583'
     );
   }
 }
